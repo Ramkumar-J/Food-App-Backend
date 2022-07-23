@@ -112,6 +112,18 @@ app.delete("/foodmenu/:id",async (req,res) => {
     }
     })
 
+app.post("/checkout",async (req,res) => {
+try {
+   let connection=await mongoClient.connect(URL);
+   let db=connection.db("food-items");
+   await db.collection("Orderinfo").insertOne(req.body);
+   await connection.close();
+   res.json({message:"Order details added succesfully"});
+} catch (error) {
+    res.status(500).json({message:"Something went wrong"});
+}
+})
+
 app.get("/foodmenu/:category",async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
@@ -123,8 +135,7 @@ app.get("/foodmenu/:category",async (req,res) => {
         res.status(500).json({message:"Something went wrong"});
     }
     })
-
-
+   
     app.listen(3005, () => {
         console.log("webserver on");
       });
