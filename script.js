@@ -11,6 +11,19 @@ app.use(cors({
 let mongoClient=mongodb.MongoClient;
 let URL="mongodb+srv://ramkumar:ramrk123@cluster0.yecly.mongodb.net/?retryWrites=true&w=majority";
 
+let authenticate=(req,res,next) => {
+   if(req.headers.authorization){
+    let decode=jwt.verify(req.headers.authorization,"foodappsecretkey");
+    if(decode){
+        next();
+    }else{
+        res.status(401).json({message:"Unauthorized"});
+    }
+   }else{
+    res.status(401).json({message:"Unauthorized"});
+}
+}
+
 app.post("/register",async (req,res) => {
 try {
     let connection=await mongoClient.connect(URL);
@@ -37,11 +50,16 @@ app.post("/login",async (req,res) => {
                 // Generate JWT Token
                 let jwtToken=jwt.sign({name:usercheck.name,id:usercheck._id},"foodappsecretkey");
                 res.json({token:jwtToken});
+                return;
             }else{
                 res.status(401).json({message:"Credential not found"});
+                return;
             }
+           
         }else{
             res.status(401).json({message:"Credential not found"});
+            return;
+
         }
         await connection.close();
         res.json({message:"Login Successfully"});
@@ -52,7 +70,7 @@ app.post("/login",async (req,res) => {
 
 
 
-app.post("/foodmenu",async (req,res) => {
+app.post("/foodmenu",authenticate,async (req,res) => {
 try {
    let connection=await mongoClient.connect(URL);
    let db=connection.db("food-items");
@@ -64,7 +82,7 @@ try {
 }
 })
 
-app.get("/foodmenu",async (req,res) => {
+app.get("/foodmenu",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
@@ -76,7 +94,7 @@ app.get("/foodmenu",async (req,res) => {
     }
     })
 
-app.get("/foodmenu/:id",async (req,res) => {
+app.get("/foodmenu/:id",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
@@ -88,7 +106,7 @@ app.get("/foodmenu/:id",async (req,res) => {
     }
     })
 
-app.put("/foodmenu/:id",async (req,res) => {
+app.put("/foodmenu/:id",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
@@ -100,7 +118,7 @@ app.put("/foodmenu/:id",async (req,res) => {
     }
     })    
 
-app.delete("/foodmenu/:id",async (req,res) => {
+app.delete("/foodmenu/:id",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
@@ -112,7 +130,7 @@ app.delete("/foodmenu/:id",async (req,res) => {
     }
     })
 
-app.post("/checkout",async (req,res) => {
+app.post("/checkout",authenticate,async (req,res) => {
 try {
    let connection=await mongoClient.connect(URL);
    let db=connection.db("food-items");
@@ -124,7 +142,7 @@ try {
 }
 })
 
-app.get("/foodmenu/:category",async (req,res) => {
+app.get("/foodmenu/:category",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
