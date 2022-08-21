@@ -98,7 +98,7 @@ app.get("/foodmenu/:id",authenticate,async (req,res) => {
     try {
        let connection=await mongoClient.connect(URL);
        let db=connection.db("food-items");
-       let food=await  db.collection("foods").findOne({_id:mongodb.ObjectId(req.params)});
+       let food=await  db.collection("foods").findOne({_id:mongodb.ObjectId(req.params.id)});
        await connection.close();
        res.json(food);
     } catch (error) {
@@ -140,19 +140,19 @@ try {
 } catch (error) {
     res.status(500).json({message:"Something went wrong"});
 }
-})
+}) 
 
-app.get("/foodmenu/:category",authenticate,async (req,res) => {
-    try {
-       let connection=await mongoClient.connect(URL);
-       let db=connection.db("food-items");
-       let food=await  db.collection("foods").find({category:(req.params.category)}).toArray();
-       await connection.close();
-       res.json(food);
-    } catch (error) {
-        res.status(500).json({message:"Something went wrong"});
-    }
-    })
+// app.get("/foodmenu/:category",async (req,res) => {
+//     try {
+//        let connection=await mongoClient.connect(URL);
+//        let db=connection.db("food-items");
+//        let foodmenu=await db.collection("foods").find({category:(req.params.category)}).toArray();
+//        await connection.close();
+//        res.json(foodmenu);
+//     } catch (error) {
+//         res.status(500).json({message:"Something went wrong"});
+//     }
+//     })
    
     app.listen(3005, () => {
         console.log("webserver on");
