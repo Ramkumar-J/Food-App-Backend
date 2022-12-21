@@ -1,4 +1,6 @@
 let express = require("express");
+const dotenv = require("dotenv");
+dotenv.config();
 let cors = require("cors");
 let mongodb = require("mongodb");
 let bcrypt = require("bcryptjs");
@@ -74,7 +76,7 @@ app.post("/login", async (req, res) => {
       }
     } else {
       res.status(401).json({ message: "Credential not found" });
-      return;
+      // return;
     }
     await connection.close();
     res.json({ message: "Login Successfully" });
@@ -167,7 +169,8 @@ app.post("/checkout", authenticate, async (req, res) => {
   }
 });
 
+const port = process.env.PORT || 3005;
 
-app.listen(process.env.PORT || 3005, () => {
-  console.log("webserver on");
+app.listen(port, () => {
+  console.log(`webserver on at ${port}`);
 });
