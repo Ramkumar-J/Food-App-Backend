@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://graceful-sunshine-edf9ff.netlify.app",
+      "https://playful-tiramisu-153af5.netlify.app",
     ],
   })
 );
