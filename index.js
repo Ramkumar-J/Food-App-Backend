@@ -11,7 +11,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "https://playful-tiramisu-153af5.netlify.app",
+      "https://sanburg-restaurent.netlify.app",
     ],
   })
 );
