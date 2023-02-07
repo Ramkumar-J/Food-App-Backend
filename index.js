@@ -133,7 +133,7 @@ app.put("/foodmenu/:id", authenticate, async (req, res) => {
     let db = connection.db("food-items");
     await db
       .collection("foods")
-      .updateOne({ _id: mongodb.ObjectId(req.params.id) }, { $set: req.body });
+      .findOneAndUpdate({ _id: mongodb.ObjectId(req.params.id) }, { $set: req.body });
     await connection.close();
     res.json({ message: "Food updated successfully" });
   } catch (error) {
